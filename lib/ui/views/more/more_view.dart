@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:weather_app/models/weather_data.dart';
 import 'package:weather_app/ui/views/more/more_viewmodel.dart';
 import 'package:weather_app/utils/constants.dart';
+import 'package:weather_app/utils/utils.dart';
 
 class MoreView extends StatelessWidget {
-  const MoreView({Key? key}) : super(key: key);
+  final List<WeatherData> weatherData;
+  const MoreView({Key? key, required this.weatherData}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MoreViewModel>.nonReactive(
@@ -35,26 +38,26 @@ class MoreView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 30),
-                for (var item in model.days)
+                for (var day in weatherData)
                   Padding(
                     padding: const EdgeInsets.only(top: 48.0, right: 40.0),
                     child: Row(
                       children: [
                         Text(
-                          item,
+                          model.getDayString(day.weatherDate!.weekday),
                           style: TextStyle(
                             fontSize: 16,
                             color: deepBlue,
                           ),
                         ),
                         const Spacer(),
-                        Icon(
-                          Icons.wb_sunny_outlined,
+                        getWeatherIcon(
+                          weatherStatus: day.weatherStatus,
                           color: deepBlue,
                         ),
                         const SizedBox(width: 40),
                         Text(
-                          '26°',
+                          '${day.temp!.ceil()}°',
                           style: TextStyle(
                             fontSize: 16,
                             color: deepBlue,
