@@ -16,6 +16,7 @@ getWeatherIcon({String? weatherStatus, bool big = false, Color? color}) {
         return sunny60;
     }
   }
+
   switch (weatherStatus) {
     case 'Rain':
       return rainy(color: color);
@@ -28,4 +29,20 @@ getWeatherIcon({String? weatherStatus, bool big = false, Color? color}) {
     default:
       return sunny;
   }
+}
+
+String convertTo12HourFormat(DateTime? dateTime) {
+  if (dateTime == null) return '--';
+  int hour = dateTime.hour;
+  if (hour > 12) {
+    hour = hour - 12;
+    return '${hour}PM';
+  }
+  if (hour == 0) {
+    return '12AM';
+  }
+  if (hour == 12) {
+    return '12PM';
+  }
+  return '${hour}AM';
 }

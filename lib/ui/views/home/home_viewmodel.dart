@@ -8,7 +8,6 @@ import 'package:weather_app/app/app.router.dart';
 import 'package:weather_app/models/weather_data.dart';
 import 'package:weather_app/services/api_service.dart';
 import 'package:weather_app/utils/api_response_util.dart';
-import 'package:weather_app/utils/constants.dart';
 
 class HomeViewModel extends BaseViewModel {
   final _apiService = locator<ApiService>();
@@ -18,6 +17,7 @@ class HomeViewModel extends BaseViewModel {
   final List<WeatherData> weatherDataList = [];
   final List<WeatherData> weatherDataListForToday = [];
   final List<WeatherData> weatherDataListForTomorrow = [];
+  bool today = true;
   String city = '----';
   String country = '----';
 
@@ -88,22 +88,6 @@ class HomeViewModel extends BaseViewModel {
     );
   }
 
-  String convertTo12HourFormat(DateTime? dateTime) {
-    if (dateTime == null) return '--';
-    int hour = dateTime.hour;
-    if (hour > 12) {
-      hour = hour - 12;
-      return '${hour}PM';
-    }
-    if (hour == 0) {
-      return '12AM';
-    }
-    if (hour == 12) {
-      return '12PM';
-    }
-    return '${hour}AM';
-  }
-
   List<WeatherData> getWeatherDataForEachDay() {
     List<WeatherData> weatherDataListForEachDay = [];
     if (weatherDataList.isNotEmpty) {
@@ -131,5 +115,10 @@ class HomeViewModel extends BaseViewModel {
       }
       notifyListeners();
     }
+  }
+
+  void isToday(bool day) {
+    today = day;
+    notifyListeners();
   }
 }

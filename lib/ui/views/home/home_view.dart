@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:weather_app/models/weather_data.dart';
 import 'package:weather_app/ui/views/home/home_viewmodel.dart';
 import 'package:weather_app/utils/utils.dart';
 
@@ -122,25 +123,46 @@ class HomeView extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Text(
-                            'Today',
-                            style: TextStyle(color: Colors.white),
+                          InkWell(
+                            onTap: () => model.isToday(true),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Today',
+                                style: TextStyle(
+                                    color: model.today
+                                        ? Colors.white
+                                        : Colors.grey),
+                              ),
+                            ),
                           ),
                           const SizedBox(
                             width: 10,
                           ),
-                          const Text(
-                            'Tomorrow',
-                            style: TextStyle(color: Colors.grey),
+                          InkWell(
+                            onTap: () => model.isToday(false),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Tomorrow',
+                                style: TextStyle(
+                                    color: model.today
+                                        ? Colors.grey
+                                        : Colors.white),
+                              ),
+                            ),
                           ),
                           const SizedBox(
                             width: 10,
                           ),
                           InkWell(
                             onTap: model.navigateToMore,
-                            child: const Text(
-                              'Next 5 Days',
-                              style: TextStyle(color: Colors.grey),
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Next 5 Days',
+                                style: TextStyle(color: Colors.grey),
+                              ),
                             ),
                           ),
                         ],
@@ -148,64 +170,10 @@ class HomeView extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                      Container(
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.horizontal(
-                            left: Radius.circular(30),
-                          ),
-                          color: Colors.white24,
-                        ),
-                        //weather data in horizontal list
-                        child: SizedBox(
-                          height: 200,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: model.weatherDataListForToday.length,
-                            itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 30.0,
-                                horizontal: 10.0,
-                              ),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: Colors.blue,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 18.0,
-                                    horizontal: 12.0,
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        model.convertTo12HourFormat(model
-                                            .weatherDataList[index]
-                                            .weatherDate),
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                      const Spacer(),
-                                      getWeatherIcon(
-                                        weatherStatus: model
-                                            .weatherDataList[index]
-                                            .weatherStatus,
-                                        color: Colors.white,
-                                      ),
-                                      const Spacer(),
-                                      Text(
-                                        '${model.weatherDataList[index].temp!.ceil()}°',
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                      DaysForecastContainer(
+                        weatherDataList: model.today
+                            ? model.weatherDataListForToday
+                            : model.weatherDataListForTomorrow,
                       ),
                     ],
                   ),
@@ -214,6 +182,71 @@ class HomeView extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.08,
                 )
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DaysForecastContainer extends StatelessWidget {
+  final List<WeatherData> weatherDataList;
+  const DaysForecastContainer({
+    Key? key,
+    required this.weatherDataList,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.horizontal(
+          left: Radius.circular(30),
+        ),
+        color: Colors.white24,
+      ),
+      //weather data in horizontal list
+      child: SizedBox(
+        height: 200,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: weatherDataList.length,
+          itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 30.0,
+              horizontal: 10.0,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.blue,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 18.0,
+                  horizontal: 12.0,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      convertTo12HourFormat(weatherDataList[index].weatherDate),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const Spacer(),
+                    getWeatherIcon(
+                      weatherStatus: weatherDataList[index].weatherStatus,
+                      color: Colors.white,
+                    ),
+                    const Spacer(),
+                    Text(
+                      '${weatherDataList[index].temp!.ceil()}°',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
