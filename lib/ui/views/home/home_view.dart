@@ -8,6 +8,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => HomeViewModel(),
+      onModelReady: (model) => model.init(),
       builder: (context, model, child) => Scaffold(
         backgroundColor: Colors.blue.shade600,
         body: Container(
@@ -33,9 +34,9 @@ class HomeView extends StatelessWidget {
                           Icon(Icons.menu, color: Colors.white),
                         ],
                       ),
-                      const Text(
-                        'London,',
-                        style: TextStyle(
+                      Text(
+                        '${model.city},',
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
@@ -44,9 +45,9 @@ class HomeView extends StatelessWidget {
                       const SizedBox(
                         height: 8,
                       ),
-                      const Text(
-                        'United Kingdom',
-                        style: TextStyle(
+                      Text(
+                        model.country,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
@@ -55,9 +56,9 @@ class HomeView extends StatelessWidget {
                       const SizedBox(
                         height: 8,
                       ),
-                      const Text(
-                        'Sat, 6 Aug',
-                        style: TextStyle(
+                      Text(
+                        model.todaysDate,
+                        style: const TextStyle(
                           color: Colors.white,
                         ),
                       ),
@@ -78,18 +79,15 @@ class HomeView extends StatelessWidget {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(
-                            Icons.wb_sunny_outlined,
-                            color: Colors.yellow,
-                            size: 60,
-                          ),
-                          SizedBox(
+                        children: [
+                          model.getWeatherIcon(
+                              model.weatherDataList[0].weatherStatus),
+                          const SizedBox(
                             width: 20,
                           ),
                           Text(
-                            '26°',
-                            style: TextStyle(
+                            '${model.weatherDataList[0].temp!.ceil()}°',
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 60,
@@ -100,9 +98,9 @@ class HomeView extends StatelessWidget {
                       const SizedBox(
                         height: 8,
                       ),
-                      const Text(
-                        'Sunny',
-                        style: TextStyle(color: Colors.white),
+                      Text(
+                        '${model.weatherDataList[0].weatherDescription}',
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ],
                   ),
@@ -113,24 +111,27 @@ class HomeView extends StatelessWidget {
                   child: Column(
                     children: [
                       Row(
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'Today',
                             style: TextStyle(color: Colors.white),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
-                          Text(
+                          const Text(
                             'Tomorrow',
                             style: TextStyle(color: Colors.grey),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
-                          Text(
-                            'Next 5 Days',
-                            style: TextStyle(color: Colors.grey),
+                          InkWell(
+                            onTap: model.navigateToMore,
+                            child: const Text(
+                              'Next 5 Days',
+                              style: TextStyle(color: Colors.grey),
+                            ),
                           ),
                         ],
                       ),
@@ -149,7 +150,7 @@ class HomeView extends StatelessWidget {
                           height: 200,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            // itemCount: model.weatherData.length,
+                            itemCount: model.weatherDataList.length,
                             itemBuilder: (context, index) => Padding(
                               padding: const EdgeInsets.symmetric(
                                 vertical: 30.0,
@@ -167,18 +168,19 @@ class HomeView extends StatelessWidget {
                                   ),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    children: const [
+                                    children: [
                                       Text(
-                                        '9AM',
+                                        '${model.weatherDataList[index].weatherDate}',
                                         style: TextStyle(color: Colors.white),
                                       ),
-                                      Spacer(),
-                                      Icon(Icons.cloud_outlined,
+                                      const Spacer(),
+                                      const Icon(Icons.cloud_outlined,
                                           color: Colors.white),
-                                      Spacer(),
+                                      const Spacer(),
                                       Text(
-                                        '16°',
-                                        style: TextStyle(color: Colors.white),
+                                        '${model.weatherDataList[index].temp!.ceil()}°',
+                                        style: const TextStyle(
+                                            color: Colors.white),
                                       ),
                                     ],
                                   ),
