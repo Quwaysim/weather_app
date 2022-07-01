@@ -15,10 +15,11 @@ class HomeViewModel extends BaseViewModel {
   final _navigationService = locator<NavigationService>();
   final log = getLogger('HomeViewModel');
   final todaysDate = DateFormat('EEEE, MMMM d').format(DateTime.now());
+  final List<WeatherData> weatherDataList = [];
+  final List<WeatherData> weatherDataListForToday = [];
+  final List<WeatherData> weatherDataListForTomorrow = [];
   String city = '----';
   String country = '----';
-
-  List<WeatherData> weatherDataList = [];
 
   Future<void> init() async {
     log.i('init');
@@ -39,6 +40,7 @@ class HomeViewModel extends BaseViewModel {
             },
           );
           notifyListeners();
+          getWeatherDataFor2Days();
         } else {
           log.wtf('response: ${response.toString()}');
         }
@@ -78,36 +80,12 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void navigateToMore() {
-    _navigationService.navigateTo(Routes.moreView);
-  }
-
-  getWeatherIcon({String? weatherStatus, bool big = false}) {
-    if (big) {
-      switch (weatherStatus) {
-        case 'Rain':
-          return rainy60;
-        case 'Clouds':
-          return cloudy60;
-        case 'Snow':
-          return snowy60;
-        case 'Mist':
-          return cloudy60;
-        default:
-          return sunny60;
-      }
-    }
-    switch (weatherStatus) {
-      case 'Rain':
-        return rainy;
-      case 'Clouds':
-        return cloudy;
-      case 'Snow':
-        return snowy;
-      case 'Mist':
-        return cloudy;
-      default:
-        return sunny;
-    }
+    _navigationService.navigateTo(
+      Routes.moreView,
+      arguments: MoreViewArguments(
+        weatherData: getWeatherDataForEachDay(),
+      ),
+    );
   }
 
   String convertTo12HourFormat(DateTime? dateTime) {
@@ -117,6 +95,41 @@ class HomeViewModel extends BaseViewModel {
       hour = hour - 12;
       return '${hour}PM';
     }
+    if (hour == 0) {
+      return '12AM';
+    }
+    if (hour == 12) {
+      return '12PM';
+    }
     return '${hour}AM';
+  }
+
+  List<WeatherData> getWeatherDataForEachDay() {
+    List<WeatherData> weatherDataListForEachDay = [];
+    if (weatherDataList.isNotEmpty) {
+      //choose all weatherData that contains 09:00:00 and add to list
+      for (var element in weatherDataList) {
+        if (element.weatherDate.toString().contains('15:00:00')) {
+          weatherDataListForEachDay.add(element);
+        }
+      }
+    }
+    log.d('weatherDataListForEachDay: $weatherDataListForEachDay');
+    return weatherDataListForEachDay;
+  }
+
+  void getWeatherDataFor2Days() {
+    if (weatherDataList.isNotEmpty) {
+      DateTime today =
+          DateFormat('yyyy-MM-dd').parse(DateTime.now().toString());
+      for (var element in weatherDataList) {
+        if (element.weatherDate!.day.compareTo(today.day) == 0) {
+          weatherDataListForToday.add(element);
+        } else if (element.weatherDate!.day.compareTo(today.day + 1) == 0) {
+          weatherDataListForTomorrow.add(element);
+        }
+      }
+      notifyListeners();
+    }
   }
 }

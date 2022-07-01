@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:weather_app/ui/views/home/home_viewmodel.dart';
+import 'package:weather_app/utils/utils.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -82,7 +83,7 @@ class HomeView extends StatelessWidget {
                         children: [
                           model.weatherDataList.isEmpty
                               ? const SizedBox()
-                              : model.getWeatherIcon(
+                              : getWeatherIcon(
                                   weatherStatus:
                                       model.weatherDataList[0].weatherStatus,
                                   big: true,
@@ -159,7 +160,7 @@ class HomeView extends StatelessWidget {
                           height: 200,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: model.weatherDataList.length,
+                            itemCount: model.weatherDataListForToday.length,
                             itemBuilder: (context, index) => Padding(
                               padding: const EdgeInsets.symmetric(
                                 vertical: 30.0,
@@ -186,10 +187,11 @@ class HomeView extends StatelessWidget {
                                             color: Colors.white),
                                       ),
                                       const Spacer(),
-                                      model.getWeatherIcon(
+                                      getWeatherIcon(
                                         weatherStatus: model
                                             .weatherDataList[index]
                                             .weatherStatus,
+                                        color: Colors.white,
                                       ),
                                       const Spacer(),
                                       Text(
