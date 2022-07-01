@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 class WeatherData {
-  double? temp;
+  num? temp;
   int? weatherId;
   String? weatherStatus;
   String? weatherDescription;
@@ -16,13 +16,12 @@ class WeatherData {
   });
 
   factory WeatherData.fromJson(Map<String, dynamic> json) => WeatherData(
-        temp: json['main']['temp'] as double,
-        weatherId: json['weather'][0]['id'] as int,
-        weatherStatus: json['weather'][0]['main'] as String,
-        weatherDescription: json['weather'][0]['description'] as String,
+        temp: json['main']['temp'],
+        weatherId: json['weather'][0]['id'],
+        weatherStatus: json['weather'][0]['main'],
+        weatherDescription: json['weather'][0]['description'],
         //convert to 24hr format
-        weatherDate:
-            DateFormat('yyyy-MM-dd HH:mm:ss').parse(json['dt_txt'] as String),
+        weatherDate: DateFormat('yyyy-MM-dd HH:mm:ss').parse(json['dt_txt']),
       );
 
   Map<String, dynamic> toJson() => {

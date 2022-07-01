@@ -81,7 +81,21 @@ class HomeViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.moreView);
   }
 
-  getWeatherIcon(String? weatherStatus) {
+  getWeatherIcon({String? weatherStatus, bool big = false}) {
+    if (big) {
+      switch (weatherStatus) {
+        case 'Rain':
+          return rainy60;
+        case 'Clouds':
+          return cloudy60;
+        case 'Snow':
+          return snowy60;
+        case 'Mist':
+          return cloudy60;
+        default:
+          return sunny60;
+      }
+    }
     switch (weatherStatus) {
       case 'Rain':
         return rainy;
@@ -94,5 +108,15 @@ class HomeViewModel extends BaseViewModel {
       default:
         return sunny;
     }
+  }
+
+  String convertTo12HourFormat(DateTime? dateTime) {
+    if (dateTime == null) return '--';
+    int hour = dateTime.hour;
+    if (hour > 12) {
+      hour = hour - 12;
+      return '${hour}PM';
+    }
+    return '${hour}AM';
   }
 }

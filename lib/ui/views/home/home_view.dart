@@ -80,8 +80,13 @@ class HomeView extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // model.getWeatherIcon(
-                          //     model.weatherDataList[0].weatherStatus),
+                          model.weatherDataList.isEmpty
+                              ? const SizedBox()
+                              : model.getWeatherIcon(
+                                  weatherStatus:
+                                      model.weatherDataList[0].weatherStatus,
+                                  big: true,
+                                ),
                           const SizedBox(
                             width: 20,
                           ),
@@ -174,13 +179,18 @@ class HomeView extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        '${model.weatherDataList[index].weatherDate}',
+                                        model.convertTo12HourFormat(model
+                                            .weatherDataList[index]
+                                            .weatherDate),
                                         style: const TextStyle(
                                             color: Colors.white),
                                       ),
                                       const Spacer(),
-                                      const Icon(Icons.cloud_outlined,
-                                          color: Colors.white),
+                                      model.getWeatherIcon(
+                                        weatherStatus: model
+                                            .weatherDataList[index]
+                                            .weatherStatus,
+                                      ),
                                       const Spacer(),
                                       Text(
                                         '${model.weatherDataList[index].temp!.ceil()}°',
