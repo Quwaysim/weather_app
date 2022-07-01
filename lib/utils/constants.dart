@@ -5,25 +5,25 @@ const apiUrl = 'https://api.openweathermap.org/data/2.5/forecast';
 Color deepBlue = const Color.fromARGB(255, 4, 42, 100);
 
 //Icons
-const sunny = Icon(
-  Icons.wb_sunny_outlined,
-  color: Colors.yellow,
-);
+sunny() => const Icon(
+      Icons.wb_sunny_outlined,
+      color: Colors.yellow,
+    );
 
-const cloudy = Icon(
-  Icons.wb_cloudy_outlined,
-  color: Colors.white,
-);
+cloudy({Color? color = Colors.white}) => Icon(
+      Icons.wb_cloudy_outlined,
+      color: color,
+    );
 
-const rainy = Icon(
-  Icons.water_drop_outlined,
-  color: Colors.white,
-);
+rainy({Color? color = Colors.white}) => Icon(
+      Icons.water_drop_outlined,
+      color: color,
+    );
 
-const snowy = Icon(
-  Icons.snowing,
-  color: Colors.white,
-);
+snowy({Color? color = Colors.white}) => Icon(
+      Icons.snowing,
+      color: color,
+    );
 
 const sunny60 = Icon(
   Icons.wb_sunny_outlined,

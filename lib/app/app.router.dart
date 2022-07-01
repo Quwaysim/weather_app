@@ -8,7 +8,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
 
+import '../models/weather_data.dart';
 import '../ui/views/home/home_view.dart';
 import '../ui/views/more/more_view.dart';
 
@@ -38,10 +40,25 @@ class StackedRouter extends RouterBase {
       );
     },
     MoreView: (data) {
+      var args = data.getArgs<MoreViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const MoreView(),
+        builder: (context) => MoreView(
+          key: args.key,
+          weatherData: args.weatherData,
+        ),
         settings: data,
       );
     },
   };
+}
+
+/// ************************************************************************
+/// Arguments holder classes
+/// *************************************************************************
+
+/// MoreView arguments holder class
+class MoreViewArguments {
+  final Key? key;
+  final List<WeatherData> weatherData;
+  MoreViewArguments({this.key, required this.weatherData});
 }
