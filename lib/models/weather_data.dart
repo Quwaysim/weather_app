@@ -21,7 +21,8 @@ class WeatherData {
         weatherStatus: json['weather'][0]['main'] as String,
         weatherDescription: json['weather'][0]['description'] as String,
         //convert to 24hr format
-        weatherDate: DateFormat('HH').parse(json['dt_txt'] as String),
+        weatherDate:
+            DateFormat('yyyy-MM-dd HH:mm:ss').parse(json['dt_txt'] as String),
       );
 
   Map<String, dynamic> toJson() => {

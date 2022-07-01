@@ -80,13 +80,15 @@ class HomeView extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          model.getWeatherIcon(
-                              model.weatherDataList[0].weatherStatus),
+                          // model.getWeatherIcon(
+                          //     model.weatherDataList[0].weatherStatus),
                           const SizedBox(
                             width: 20,
                           ),
                           Text(
-                            '${model.weatherDataList[0].temp!.ceil()}°',
+                            model.weatherDataList.isEmpty
+                                ? '-'
+                                : '${model.weatherDataList[0].temp!.ceil()}°',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -99,7 +101,9 @@ class HomeView extends StatelessWidget {
                         height: 8,
                       ),
                       Text(
-                        '${model.weatherDataList[0].weatherDescription}',
+                        model.weatherDataList.isEmpty
+                            ? '-'
+                            : '${model.weatherDataList[0].weatherDescription}',
                         style: const TextStyle(color: Colors.white),
                       ),
                     ],
@@ -171,7 +175,8 @@ class HomeView extends StatelessWidget {
                                     children: [
                                       Text(
                                         '${model.weatherDataList[index].weatherDate}',
-                                        style: TextStyle(color: Colors.white),
+                                        style: const TextStyle(
+                                            color: Colors.white),
                                       ),
                                       const Spacer(),
                                       const Icon(Icons.cloud_outlined,
