@@ -20,14 +20,17 @@ class HomeViewModel extends BaseViewModel {
   bool today = true;
   String city = '----';
   String country = '----';
+  LocationData? locationData;
 
   Future<void> init() async {
     log.i('init');
-    LocationData? locationData = await getCurrentLocationData();
+    locationData = await getCurrentLocationData();
 
     if (locationData != null) {
       final response = await _apiService.getWeatherData(
-          locationData.latitude!, locationData.longitude!);
+        locationData!.latitude!,
+        locationData!.longitude!,
+      );
       if (response is ApiResponse) {
         log.i('response: ${response.toString()}');
         if (response.statusCode == 200) {

@@ -4,6 +4,7 @@ import 'package:weather_app/app/app.locator.dart';
 import 'package:weather_app/app/app.router.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   runApp(const MyApp());
 }
